@@ -22,10 +22,10 @@ func Run(args []string, stdout, stderr io.Writer) int {
 	case "size":
 		// 攒 250 条。
 		buffer := telemetry.NewBuffer()
-		batches := 0
 		for index := 0; index < 250; index++ {
-			batches += len(buffer.Add(telemetry.Event{AtMs: int64(index), Name: "hit"}))
+			buffer.Add(telemetry.Event{AtMs: int64(index), Name: "hit"})
 		}
+		batches := len(buffer.Flush(0))
 		fmt.Fprintf(stdout, "batches=%d pending=%d\n", batches, buffer.Pending())
 	case "window":
 		// 十条事件，先在一秒后 flush，再在六秒后 flush。
